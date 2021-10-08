@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="notify_sale" model="mail.template">
+            <field name="name">Confirmación de pedido</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">juan.camberos@estrasol.com.mx</field>
+            <field name="email_to">pcamberos77@gmail.com</field>
+            <field name="subject"> Confirmación de pedido</field>
+            <field name="body_html" type="html">
+                <p>A quien corresponda</p>
+                <p>
+                    Se le informa la confirmación del pedido 
+                </p>
+                <p>
+                    Sin más por el momento,
+                    <br/><br/>
+                    Saludos    
+                </p>
+                
+            </field>
+        </record>
+    </data>
+</odoo>

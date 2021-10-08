@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="template_inehrit_report_promotions"  inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//t[@t-set='address']" position="before">
+                <div class="col-12" style="font-size: 10px;">
+                    <div class="row" >
+                        <div class="col-2 ">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Aplica en precio</span>
+                            </div>
+                            <t t-foreach="o.promotion_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"><span t-field="prom.price_client" /></div>
+                                </div>    
+                            </t>
+                        
+                        </div>
+                        <div class="col-4 ">
+                            <div class="row" style="font-size: 12px;">Descuentos en factura</div>
+                            <t t-foreach="o.promotion_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center" ><span t-field="prom.name" /> </div> 
+                                </div>
+                            </t>
+                        
+                        </div>
+                        <div class="col-4">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Descuentos fuera de factura</span>
+                            </div>
+                            <t t-foreach="o.promotion_ap_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"> <span t-field="prom.name"/> </div>   
+                                </div>    
+                            </t>
+                        </div>
+                    
+                        <div class="col-2 ">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Aplica en precio</span>
+                            </div>
+                            <t t-foreach="o.promotion_ap_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"><span t-field="prom.price_client" /></div>
+                                </div>    
+                            </t>
+                        
+                        </div>
+                    
+                    </div>
+                </div>
+            </xpath>
+            
+            <xpath expr="//th[@name='th_price_unit']" position="after">
+                
+                <th name="th_promotion" class="text-right"><strong>Prom(%)</strong></th>
+                
+
+            </xpath>
+            <xpath expr="//td[5]" position="after">
+                <td class="text-right">
+                    <t t-if="line.free_products == True">
+                            <span>100%,</span>
+                    </t>
+                    <t t-else="">
+                        <t t-foreach="line.discount_ids" t-as="discount">
+                            <t t-if="discount.apply_type in ['purchase_subtotal','purchase_product','price_unit_original']">
+                                <span t-field="discount.discount" />%,
+                            </t>
+                        </t>
+                    </t>
+                </td>
+            </xpath>
+        </template>
+    
+        <template id="tempalte_promotions_and_add_values"  inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//t[@t-set='address']" position="before">
+                <div class="col-12" style="font-size: 10px;">
+                    <div class="row">
+                        <div class="col-3 ">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Aplica en precio</span>
+                            </div>
+                            <t t-foreach="o.promotion_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"><span t-field="prom.price_client" /></div>
+                                </div>    
+                            </t>
+                        
+                        </div>
+                        <div class="col-3 ">
+                            <div class="row" style="font-size: 12px;">Descuentos en factura</div>
+                            <t t-foreach="o.promotion_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center" ><span t-field="prom.name" /> </div> 
+                                </div>
+                            </t>
+                        
+                        </div>
+                        <div class="col-3">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Descuentos fuera de factura</span>
+                            </div>
+                            <t t-foreach="o.promotion_ap_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"> <span t-field="prom.name"/> </div>   
+                                </div>    
+                            </t>
+                        </div>
+                    
+                        <div class="col-3 ">
+                            <div class="row" style="font-size: 12px;">
+                                <span>Aplica en precio</span>
+                            </div>
+                            <t t-foreach="o.promotion_ap_ids" t-as="prom">
+                                <div class="row text-center" >
+                                    <div class="col-12 text-center"><span t-field="prom.price_client" /></div>
+                                </div>    
+                            </t>
+                        
+                        </div>
+                    
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//th[@name='th_quantity']" position="after">
+                <th name="th_price_unit" class="text-right"><strong>Precio</strong></th>
+                <th name="th_promotion" class="text-right"><strong>Prom(%)</strong></th>
+                <th name="th_amount" class="text-right"><strong>Subtotal</strong></th>
+
+            </xpath>
+            <xpath expr="//td[3]" position="after">
+                <td class="text-right">
+                    <span t-field="order_line.price_unit"/>
+                </td>
+                <td class="text-right">
+                    <t t-if="order_line.free_products == True">
+                        <span>100%</span>
+                    </t>
+                    <t t-else="">
+                        <t t-foreach="order_line.discount_ids" t-as="discount">
+                            <t t-if="discount.apply_type in ['purchase_subtotal','purchase_product','price_unit_original']">
+                                <span t-field="discount.discount" />%,
+                            </t>
+                        </t>
+                    </t>
+                </td>
+                <td class="text-right">
+                    <span t-field="order_line.price_subtotal"
+                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </td>
+            </xpath>
+            <xpath expr="//table" position="after">
+                <div id="total" class="row justify-content-end">
+                    <div class="col-4">
+                        <table class="table table-sm">
+                            <tr class="border-black">
+                                <td name="td_subtotal_label"><strong>Subtotal</strong></td>
+                                <td class="text-right">
+                                    <span t-field="o.amount_untaxed"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td name="td_taxes_label">Impuestos</td>
+                                <td class="text-right">
+                                    <span t-field="o.amount_tax"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr class="border-black o_total">
+                                <td name="td_amount_total_label"><strong>Total</strong></td>
+                                <td class="text-right">
+                                    <span t-field="o.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        
+    </data>
+</odoo>

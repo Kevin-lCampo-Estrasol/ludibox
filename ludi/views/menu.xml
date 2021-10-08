@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>  
+    <menuitem name="Marcas" sequence="2" id="ludi_brand_purchase_menu" parent="purchase.menu_purchase_products" action="action_brand_act_window"/>
+    <menuitem name="Descuentos, Apoyos y promociones" sequence="100" id="ludi.purchae_promotion_ludi" parent="purchase.menu_procurement_management" action="ludi.ludi_promotions_action"/>
+
+    <menuitem name="Marcas" sequence="2"  id="ludi_brand_sale_menu" parent="sale.product_menu_catalog" action="action_brand_act_window"/>
+
+    <menuitem name="Marcas" sequence="2"  id="ludi_brand_stock_menu" parent="stock.menu_stock_inventory_control" action="action_brand_act_window"/>
+</odoo>

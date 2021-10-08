@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="purchase_order_ludi_inherith_form">
+            <field name="name">ludi.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']" position="before">
+                    <div class="row" attrs="{'invisible':[('pending_promotions', '=', False)]}">
+                        <div class="col-12 text-center">
+                            <h5 style="color:red;">El proveedor tiene notas de crédito pendientes</h5>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="pending_promotions" invisible="1"/>
+                </xpath>
+                <xpath expr="//header" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_user</attribute>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <header groups="ludi.supplier_permission_ludi">
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
+                    </header>
+                </xpath>
+                <xpath expr="//tree//field[@name='product_id']" position="before">
+                    <field name="restriction" groups="purchase.group_purchase_manager"/>
+                    <field name="free_products" invisible="1"/>
+                </xpath>
+                <xpath expr="//tree//field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='date_planned']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='product_qty']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='product_uom']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='taxes_id']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('free_products','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//tree//field[@name='product_uom']" position="attributes">
+                    <attribute name="force_save">1</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="down_payment" attrs="{'invisible':[('state', '=', 'cancel')]}"/>
+                    <label for="date_to_delivery" attrs="{'invisible':['|',('state','=','cancel'),('authorize_delivery', '=', True)]}"/>
+                    <div class="o_row" attrs="{'invisible':['|',('state','=','cancel'),('authorize_delivery', '=', True)]}">
+					    <field name="date_to_delivery" />
+					    <button type="object" name="open_wizard_calendar" class="btn-sm btn-link mb4 fa fa-calendar" aria-label="Ver Fechas" title="Ver Fechas"/>
+				    </div>
+                    
+                    <button name="change_authorize_delivery" type="object" string="Autorizar fecha de recepción" class="btn-primary" groups="purchase.group_purchase_manager" attrs="{'invisible':['|',('state','=','cancel'),('authorize_delivery', '=', True)]}"/>
+                    <field name="authorize_delivery" invisible="1"/>
+                    <field name="location_id" domain="[('usage','=','internal')]" groups="purchase.group_purchase_manager" attrs="{'invisible':['|',('state','=','cancel'),('authorize_delivery', '=', True)]}"/>
+                    
+                </xpath>
+
+                <xpath expr="//tree//field[@name='taxes_id']" position="before">
+                    <field name="discount_ids" widget="many2many_tags" force_save="1" readonly="1"/>
+                </xpath>
+                
+                <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible':['|',('state','not in',['sent']),('authorize_delivery', '!=', True)]}</attribute>
+                    <attribute name="states"></attribute>
+                </xpath>
+
+                <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible':['|',('state','not in',['draft']),('authorize_delivery', '!=', True)]}</attribute>
+                    <attribute name="states"></attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    
+                    
+                </xpath> 
+                <xpath expr="//field[@name='origin']" position="before">
+                   <field name="amount_purchase" attrs="{'invisible':[('amount_purchase', '&lt;=', 0)]}"/>
+                   <button type="object" string="Prodctos sin cargo" name="open_wizard_free_products" class="btn-primary" attrs="{'invisible':[('amount_purchase', '&lt;=', 0)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="context">{'default_state': 'draft','default_order_id':active_id}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='products']" position="after">
+                    <page string="Descuentos, Promociones y apoyos">
+                        <div class="row mb-2">
+                        <div class="col-4 text-center"></div>
+                        <div class="col-4 text-center">
+                            <button name="onchange_apply_promotions_order_line" class="btn-primary" type="object" string="Aplicar Descuentos"/>
+                        </div>
+                        <div class="col-4 text-center"></div>
+                    </div>
+                        <group string="Promociones aplicadas en compra">
+                            <div class="row mb-2">
+                                <div class="col-4 text-center"></div>
+                                <div class="col-4 text-center">
+                                    <button name="onchange_apply_promotions_order_line" class="btn-primary" type="object" string="Aplicar Promociones"/>
+                                </div>
+                                <div class="col-4 text-center"></div>
+                            </div>
+                            <div>
+                                <field name="promotion_ids"   context="{'default_partner_id': partner_id, 'default_in_purchase': True }" domain = "[('in_purchase','=',True),('partner_id','=',partner_id)]">
+                                    <tree >
+                                        <field name="name"/>
+                                        <field name="promotion_type_id"/>
+                                        <field name="discount"/>
+                                        <field name="price_client"/>
+                                    </tree> 
+                                </field>
+                            </div>
+                        </group>
+                        <group  string="Promotiones aplicadas en Factura">
+                            <div>
+                                <field name="promotion_ap_ids" force_save="1" attrs="{'readonly':[('state', 'not in', ['done','purchase'])]}">
+                                    <tree >
+                                        <field name="name"/>
+                                        <field name="promotion_type_id"/>
+                                        <field name="apply_type"/>
+                                        <field name="discount"/>
+                                        <field name="price_client"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </group>
+                    </page>            
+               </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

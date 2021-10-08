@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="action_brand_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Marcas</field>
+            <field name="res_model">ludi.brand</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Registra a una nueva Marca
+                </p>
+            </field>
+        </record>
+
+        <record id="brand_view_tree" model="ir.ui.view">
+            <field name="name">ludi.brand.tree</field>
+            <field name="model">ludi.brand</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="favorite" widget="priority"/>
+                    <field name="name"/>
+                    <field name="product_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="brand_view_form" model="ir.ui.view">
+            <field name="name">ludi.brand.form</field>
+            <field name="model">ludi.brand</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <h2>
+                            <field name="favorite" widget="priority"/>
+                            <field name="name"/>
+                        </h2>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+       
+        
+    
+    </data>
+</odoo>

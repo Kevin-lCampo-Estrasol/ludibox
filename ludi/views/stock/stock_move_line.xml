@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_move_line_form_inherit_ludi" model="ir.ui.view">
+            <field name="name">stock.move.line.ludi.inherit.form</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='qty_done']" position="after">
+                    <field name="pending_product"/>
+                </xpath>
+                <xpath expr="//field[@name='qty_done']" position="before">
+                    <field name="product_qty"/>
+                </xpath>
+                
+            </field>
+        </record>
+    
+    
+    </data>
+</odoo>

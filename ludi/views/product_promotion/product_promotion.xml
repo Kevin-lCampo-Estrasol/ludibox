@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ludi_promotions_action" model="ir.actions.act_window">
+            <field name="name">Descuentos, Promociones y Apoyos</field>
+            <field name="res_model">ludi.product.promotion</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                There's no promotions, you must create one!
+              </p>
+            </field>
+        </record>
+        
+
+        <record id="promotional_product_view_tree" model="ir.ui.view">
+            <field name="name">ludi.product.promotion.tree</field>
+            <field name="model">ludi.product.promotion</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_ids" widget="many2many_tags"/>
+                    <field name="date_begin"/>
+                    <field name="date_end"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="promotional_product_view_form" model="ir.ui.view">
+            <field name="name">ludi.product.promotion.form</field>
+            <field name="model">ludi.product.promotion</field>
+            <field name="arch" type="xml">
+                <form >
+                    <header>
+                        <button name="state_draft" attrs="{'invisible':[('state', '!=', 'cancel')]}" type="object" string="Cambiar a Borrrador" class="oe_highlight"  />
+                        <button name="authorize" string="Autorizar" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
+                        <button name="generate_credit_note" type="object" string="Generar Nota de Crédito" class="oe_highlight"  
+                        attrs="{'invisible':['|','|',('in_purchase', '=', True),('state', '!=', 'authorized'),('apply_type','!=','credit_note'),('invoice_credit_notes_ids','!=',False)]}"/>                        
+                        <button name="add_lines_purchase" type="object" string="Generar Recepción" class="oe_highlight"  
+                        attrs="{'invisible':['|','|',('in_purchase', '=', True),('state', '!=', 'authorized'),('apply_type','!=','products')]}"/>      
+                        <button name="apply_credit_note_invoice" type="object" string="Aplicar descuento en factura" class="oe_highlight"  
+                        attrs="{'invisible':['|','|',('in_purchase', '=', True),('state', '!=', 'authorized'),('apply_type','!=','invoice')]}"/>      
+                        <button name="state_cancel" type="object" string="cancelar" class="oe_highlight" attrs="{'invisible':[('state', '=', 'cancel')]}"/>      
+                        <field name="state" widget="statusbar" force_save="1" readonly="1"/>
+                    </header>
+                    <sheet>
+                        
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_form_view_credit_notes" type="object" icon="fa-usd" string="Notas de Crédito" class="oe_stat_button" 
+                            attrs="{'invisible':[('paid_with', '!=', 'credit_note')]}"/>
+                            <button name="open_form_view_credit_notes" type="object" icon="fa-usd" string="Notas de Crédito" class="oe_stat_button" 
+                            attrs="{'invisible':[('apply_type','not in',['credit_note','ant_inv'])]}"/>
+                        </div>
+                        
+                        
+                        <label for="name" string="Nombre de la Promoción"/>
+                        <h1>
+                            <field name="name" required="1"/>
+                        </h1>
+                        <group>
+                            <field name="description" required="1"/>
+                        </group>
+                        <group>
+                            <group string="Fecha Inicio">
+                                <field name="date_begin"/>
+                            </group>
+                            <group string="Fecha Fin">
+                                <field name="date_end"/> 
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="in_purchase"/>
+                                <field name="price_client" widget="radio" options="{'horizontal': true}"/>
+                                <field name="partner_id" required="1"/>
+                                <field name="promotion_type_id" required="1" />
+                                <field name="apply_type" invisible="1"/>
+                                <field name="products_discount"/>
+                                <field name="product_ids"  widget="many2many_tags" attrs="{'invisible':[('products_discount', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="location_id" attrs="{'invisible':[('apply_type', '!=', 'products')]}" domain="[('usage','=','internal')]"/>
+                                <field name="date_to_delivery" attrs="{'invisible':[('apply_type', '!=', 'products')]}"/>
+                    
+                                <field name="stock_picking_id" readonly="1" attrs="{'invisible':[('stock_picking_id', '=', False)]}"/>
+                                <field name="invoice_id" attrs="{'invisible':[('apply_type', '!=', 'invoice')]}" domain="[('partner_id','=',partner_id),('move_type','=','in_invoice'),('state','=','posted')]"/>
+                                
+                                <field name="paid_date" attrs="{'invisible':[('apply_type', '!=', 'plan')]}"/>
+                                <field name="paid_with" attrs="{'invisible':[('apply_type', '!=', 'plan')]}" widget="radio" options="{'horizontal':true}"/>
+                                <field name="count_type" attrs="{'invisible':[('apply_type', '!=', 'plan')]}" widget="radio" options="{'horizontal':true}"/>
+                                <field name="check_parametrer" attrs="{'invisible':[('apply_type', '!=', 'plan')]}" widget="radio" options="{'horizontal':true}"/>
+                                 <field name="location_id" attrs="{'invisible':[('paid_with','!=','free_products')]}" domain="[('usage','=','internal')]"/>
+                                <field name="date_to_delivery" attrs="{'invisible':[('paid_with','!=','free_products')]}"/>
+
+                                <field name="total_units" attrs="{'invisible':[('count_type', '!=', 'units')]}" />
+                                <field name="total_sales" attrs="{'invisible':[('count_type', '!=', 'price')]}" />
+                                <field name="discount" attrs="{'invisible':[('apply_type', 'not in', ['invoice','purchase_subtotal','purchase_product','price_unit_original','products2','discount_products','plan'])]}" />
+                                <field name="discount_amount" attrs="{'invisible':[('in_purchase', '=', True)]}"/>
+                                <label for="invoice_date_end" attrs="{'invisible':['|',('apply_type', '!=', 'credit_note'),('paid_with','!=','credit_note')]}"/>
+                                <div class="d-flex" attrs="{'invisible':['|',('apply_type', '!=', 'credit_note'),('paid_with','!=','credit_note')]}">
+                                    <field name="invoice_date_end" attrs="{'invisible':['|',('apply_type', '!=', 'credit_note'),('paid_with','!=','credit_note')]}"/>
+                                    <span class="o_form_label mx-3 oe_edit_only" attrs="{'invisible':['|',('apply_type', '!=', 'credit_note'),('paid_with','!=','credit_note')]}"> o </span>
+                                    <field name="payment_term_id" attrs="{'invisible':['|',('apply_type', '!=', 'credit_note'),('paid_with','!=','credit_note')]}"/>
+                                </div>
+
+                                <label for="free_qty" attrs="{'invisible':[('apply_type', '!=', 'products2')]}"/>
+                                <div class="d-flex" attrs="{'invisible':[('apply_type', '!=', 'products2')]}">
+                                    <field name="free_qty"/>
+                                    <span class="o_form_label mx-3 oe_edit_only"> EN </span>
+                                    <field name="purchase_qty"/>
+                                </div>
+                                <button name="compute_total_sales" type="object" string="Computar total"/>
+                                <button name="compute_and_apply_promotion" type="object" string="Computar promoción"/>
+                            </group>
+                        </group>
+                       
+                        <notebook>
+                            <page string="Productos sin Cargo" attrs="{'invisible':[('apply_type', '!=', 'products'),('paid_with','!=','free_products')]}">
+                                <field name="products_without_charge" context="{'default_partner_id':partner_id,'default_promotion_id':active_id}">
+                                    <tree editable="bottom">
+                                        <field name="partner_id" invisible="1" required="1"/>
+                                        <field name="product_id" required="1"/>
+                                        <field name="product_qty"/>
+                                        <field name="cost" invisible="1"/>
+                                        <field name="price_unit"/>
+                                        <field name="product_uom_id" required="1"/>
+                                        <field name="subtotal"/>
+                                        <field name="promotion_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_subtotal"/>
+                                </group>
+                            </page>
+                            <page string="Notas de Crédito" invisible="1">
+                                <field name="invoice_credit_notes_ids"/>
+                            </page>
+                            <page string="Metas del Plan" attrs="{'invisible':[('apply_type', '!=', 'plan')]}">
+                                <field name="next_discount">
+                                    <tree editable="bottom">
+                                        <field name="amount"/>
+                                        <field name="porcent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter" >
+		                <field name="message_follower_ids" modifiers="{}" id="message_follower_ids"/>
+		                <field name="activity_ids" modifiers="{}" id="activity_ids"/>
+		                <field name="message_ids" modifiers="{}" id="message_ids"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

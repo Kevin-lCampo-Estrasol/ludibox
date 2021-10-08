@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ludi_product_template_form_modify">
+            <field name="name">product.template.inherit.ludi.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,sales_team.group_sale_salesman</attribute>
+                </xpath>
+                <xpath expr="//notebook" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,sales_team.group_sale_salesman</attribute>
+                </xpath>
+                
+               <xpath expr="//field[@name='sale_ok']" position="attributes">
+                   <attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,sales_team.group_sale_salesman</attribute>
+               </xpath>
+               <xpath expr="//field[@name='purchase_ok']" position="attributes">
+                   <attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,sales_team.group_sale_salesman</attribute>
+               </xpath>
+                <div name="button_box" position="inside">
+                    <button type="object"
+                        name="action_open_quants"
+                        groups="ludi.supplier_permission_ludi"
+                        attrs="{'invisible':[('type', '!=', 'product')]}"
+                        class="oe_stat_button" icon="fa-cubes">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value" widget="statinfo">
+                                <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">A mano</span>
+                        </div>
+                    </button>
+                </div>
+                <xpath expr="//notebook" position="after">
+                    <notebook groups="ludi.supplier_permission_ludi">
+                        
+                        <page string="Compra" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}" invisible="0" modifiers="{'invisible':[['purchase_ok','=',false]]}">
+                            <group name="purchase" modifiers="{}">
+				            	<group >
+				            	    <field name="default_code" string="SKU"/>
+				                </group>
+				            </group>
+				            <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)]}" modifiers="{'invisible':[['product_variant_count','&gt;',1]]}" id="seller_ids"/>
+				            <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id), 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}" modifiers="{'invisible':[['product_variant_count','&lt;=',1]]}" id="variant_seller_ids"/>
+			            </page>
+                    </notebook>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="favorite_sku"/>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="temporality_product" 
+                    class="oe_inline"
+                     widget="priority"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <h2><field name="brand" placeholder="Brand"/></h2>
+                </xpath>
+                <xpath expr="//field[@name='uom_po_id']" position="after">
+                    <field name="uom_ids" widget="many2many_tags"/>
+                </xpath>
+              
+                <xpath expr="//page[@name='invoicing']" position="after">
+                    <page string="Temporadas">
+                        <field name="product_variant_ids" invisible="1"/>
+                        <field name="temporality_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="day_begin"/>
+                                <field name="month_begin"/>
+                                <field name="day_end"/>
+                                <field name="month_end"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Promociones">
+                        <field name="promotions_ids" domain="[('product_ids','in',product_variant_ids)]" context="{'default_products_discount':True,'default_product_ids':product_variant_ids}">
+                            <tree >
+                                <field name="name"/>
+                                <field name="promotion_type_id"/>
+                                <field name="apply_type"/>
+                                <field name="discount"/>
+                                <field name="price_client"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+      
+
+    </data>
+</odoo>

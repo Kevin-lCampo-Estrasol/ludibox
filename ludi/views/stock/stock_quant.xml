@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="quant_ludi_inherit_search">
+            <field name="name">stock.quant.inherit.ludi</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.quant_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='productgroup']" position="before">
+                    <filter string='Brand' name="brandgroup" context="{'group_by': 'brand_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="stock.dashboard_open_quants" model="ir.actions.act_window">
+            <field name="context">{'search_default_internal_loc': 1,'search_default_brandgroup':1, 'search_default_productgroup':1, 'search_default_locationgroup':1} </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock.location_open_quants"> <!-- Used in location -->
+            <field name="context">{'search_default_brandgroup':1,'search_default_productgroup': 1}</field>
+        </record>
+
+        <record model="ir.actions.server" id="stock.action_view_quants"> 
+            <field name="code">
+                action = model.with_context(
+                    search_default_internal_loc=1,
+                    search_default_brandgroup=1,
+                    search_default_productgroup=1,
+                    search_default_locationgroup=1,
+                ).action_view_quants()
+            </field>
+        </record>
+
+      
+    
+         
+    </data>
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ludi_inactive_promotions" model="ir.cron">
+        <field name="name">Archive Purchase Promotions</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=7, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="ludi.model_ludi_product_promotion"/>
+        <field name="code">model.cron_execute_ludi_methods()</field>
+        <field name="state">code</field>
+    </record>
+
+
+    <record id="ludi_product_temporality_notify" model="ir.cron">
+        <field name="name">Notificar Temporalidad de productos</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=13, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="code">model.action_ludi_execute_methods()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ludi_purchase_recipt_notify" model="ir.cron">
+        <field name="name">Notificar Recepcion de Productos</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=13, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="code">model.send_all_purchase_order_date_to_delivery()</field>
+        <field name="state">code</field>
+    </record>
+
+    
+    <record id="Notify_no_return_products" model="ir.cron">
+        <field name="name">Notificar no Retorno de Productos</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=20, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="code">model.notify_group_user_no_return_products()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="notify_promos_cron" model="ir.cron">
+        <field name="name">Notificación de promociones </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="code">model.notify_promos_job()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ludi_execute_promotion" model="ir.cron">
+        <field name="name">Ejecución de promoción</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=20, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="model_id" ref="ludi.model_ludi_product_promotion"/>
+        <field name="code">model.compute_and_apply_promotion()</field>
+        <field name="state">code</field>
+    </record>
+    
+    <record id="ludi_compute_total_sales" model="ir.cron">
+        <field name="name">Actualización automatica de ventas</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="ludi.model_ludi_product_promotion"/>
+        <field name="code">model.compute_total_sales()</field>
+        <field name="state">code</field>
+    </record>
+
+</odoo>

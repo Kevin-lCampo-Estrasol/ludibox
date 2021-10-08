@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_pricelist_item_iherit_form_ludi">
+            <field name="name">product.pricelist.item.inherit.ludi.form</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='fixed_price']" position="before">
+                    <field name="cost"/>
+                    <field name="cost_with_discount"/>
+                    <field name="margin_win"/>
+                </xpath>
+                <xpath expr="//field[@name='fixed_price']" position="attributes">
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_pricelist_item_iherit_ftree_ludi">
+            <field name="name">product.pricelist.item.inherit.ludi.tree</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_tree_view_from_product"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='fixed_price']" position="before">
+                    <field name="cost"/>
+                    <field name="cost_with_discount"/>
+                    <field name="margin_win"/>
+                </xpath>
+                <xpath expr="//field[@name='fixed_price']" position="attributes">
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

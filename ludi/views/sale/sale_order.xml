@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ludi_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">ludi.sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="credit_available" attrs="{'invisible':['|',('payment_term_id', '=', 1),('state','in',['sale','done','cancel'])]}"/>
+                    <field name="credit_after_sale" attrs="{'invisible':['|',('payment_term_id', '=', 1),('state','in',['sale','done','cancel'])]}"/>
+                </xpath>
+                <xpath expr="//button[@id='action_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('state', 'not in', ['sent']),('credit_after_sale','&lt;',0)]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('state', 'not in', ['draft']),('credit_after_sale','&lt;',0)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="expected_date"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="code_identi"/>
+                </xpath>
+              
+            </field>
+        </record>
+    </data>
+</odoo>

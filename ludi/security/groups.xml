@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="supplier_create_products" model="res.groups">
+            <field name="name">Crear productos</field>
+        </record>
+
+        <record id="supplier_permission_ludi" model="res.groups">
+            <field name="category_id">30</field>
+            <field name="name">Proveedor</field>
+            <field name="menu_access" eval="[(4,364)]"/>
+        </record>
+
+        <record id="partner_ludi_personal" model="res.groups">
+            <field name="name">Socios</field>
+        </record>
+        
+        <record id="credit_and_payment" model="res.groups">
+            <field name="name">Crédito y Cobranza</field>
+        </record>
+
+        <record id="only_see_my_own_values" model="ir.rule">
+            <field name="name">Ver mis contactos</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="groups" eval="[(4, ref('supplier_permission_ludi'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="domain_force">
+                [('id','=',user.partner_id.id)]
+            </field>
+        </record>
+
+        <record id="only_see_my_own_products" model="ir.rule">
+            <field name="name">Ver mis productos</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="groups" eval="[(4, ref('supplier_permission_ludi'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="domain_force">
+                ['|',('seller_ids.name','=',user.partner_id.id),('seller_ids.name','=',user.partner_id.parent_id.id)]
+            </field>
+        </record>
+
+        <record id="only_see_my_own_product_template" model="ir.rule">
+            <field name="name">Ver mis productos plantillas</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="groups" eval="[(4, ref('supplier_permission_ludi'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="domain_force">
+                ['|',('seller_ids.name','=',user.partner_id.id),('seller_ids.name','=',user.partner_id.parent_id.id)]
+            </field>
+        </record>
+
+        <record id="only_see_my_own_supplierinfo" model="ir.rule">
+            <field name="name">Ver mis productos ventas</field>
+            <field name="model_id" ref="product.model_product_supplierinfo"/>
+            <field name="groups" eval="[(4, ref('supplier_permission_ludi'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="domain_force">
+                ['|',('name','=',user.partner_id.id),('name','=',user.partner_id.parent_id.id)]
+            </field>
+        </record>
+
+        <record id="only_see_my_own_purchase" model="ir.rule">
+            <field name="name">Ver mis compras</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="groups" eval="[(4, ref('supplier_permission_ludi'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="domain_force">
+                [('user_id','=',user.id)]
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="calendar_ludi_inherit_form">
+            <field name="name">calendar.event.ludi.inherit.form</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='categ_ids']" position="before">
+                    <field name="location_id" domain="[('usage','=','internal')]" groups="purchase.group_purchase_manager" />
+                    <field name="inventory_event"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

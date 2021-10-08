@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock.action_report_picking" model="ir.actions.report">
+            <field name="binding_model_id" ref=""/>
+        </record>
+
+        <record id="stock.action_report_delivery" model="ir.actions.report">
+            <field name="binding_model_id" ref=""/>
+        </record>
+
+        <record id="stock.action_label_transfer_template_zpl" model="ir.actions.report">
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        </record>
+
+        <record id="stock.action_label_transfer_template_pdf" model="ir.actions.report">
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        </record>
+    </data>
+    
+
+</odoo>
