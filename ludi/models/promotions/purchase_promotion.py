@@ -156,7 +156,7 @@ class LudiPromotionsModel(models.Model):
 
     def archive_promotion_expired(self):
         today = date.today()
-        promotions = self.env['ludi.product.promotion'].search([]).filtered(lambda x: today > x.date_end)
+        promotions = self.env['ludi.product.promotion'].search([]).filtered(lambda x: x.date_end != False and  today > x.date_end)
         if promotions:
             for p in promotions:
                 p.toggle_active()
